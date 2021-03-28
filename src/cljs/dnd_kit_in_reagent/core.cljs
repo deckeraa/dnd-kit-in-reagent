@@ -8,16 +8,16 @@
 (defn droppable []
   (let [{:keys [isOver setNodeRef]} (js->clj (useDroppable (clj->js {:id "droppable"})))]
     (r/as-element
-     [:div {} "Droppable element"])))
+     [:div {:ref setNodeRef} "Droppable element"])))
 
 (defn draggable []
   (let [{:keys [attributes listeners setNodeRef transform]} (js->clj (useDraggable (clj->js {:id "draggable"})))
         style {:transform (.toString (.-Translate CSS) transform)}]
     (r/as-element
-     [:div {:style style} (str "Draggable element: " style)])))
+     [:div {:ref setNodeRef :style style} (str "Draggable element: " style)])))
 
 (defn app []
-  [:> DndContext
+  [:> DndContext {:onDragStart (fn [e] (println "onDragStart: " e))}
    [:> droppable]
    [:> draggable]
    ])
