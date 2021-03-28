@@ -6,15 +6,14 @@
    ["@dnd-kit/utilities" :refer [CSS]]))
 
 (defn droppable []
-  (let [{:keys [isOver setNodeRef]} (js->clj (useDroppable (clj->js {:id "droppable"})))]
+  (let [hook-ret (useDroppable (clj->js {:id "droppable"}))]
     (r/as-element
-     [:div {:ref setNodeRef} "Droppable element"])))
+     [:div {:ref (.-setNodeRef hook-ret)} "Droppable element"])))
 
 (defn draggable []
-  (let [{:keys [attributes listeners setNodeRef transform]} (js->clj (useDraggable (clj->js {:id "draggable"})))
-        style {:transform (.toString (.-Translate CSS) transform)}]
+  (let [hook-ret (useDraggable (clj->js {:id "draggable"}))]
     (r/as-element
-     [:div {:ref setNodeRef :style style} (str "Draggable element: " style)])))
+     [:div {:ref (.-setNodeRef hook-ret)} (str "Draggable element: " (.-transform hook-ret) (js->clj hook-ret))])))
 
 (defn app []
   [:> DndContext {:onDragStart (fn [e] (println "onDragStart: " e))}
